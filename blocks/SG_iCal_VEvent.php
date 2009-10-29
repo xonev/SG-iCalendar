@@ -61,8 +61,12 @@ class SG_iCal_VEvent {
 				//if until is set, set that as the end date (using getTimeStamp)
 				if ( $until ) {
 					$this->end = strtotime( $until );
+				} else if ( $count ) {
+					//if count is set, then figure out the last occurrence and set that as the end date
+					$start = isset($this->start) ? $this->start : 0;
+					$counter = new SG_iCal_Freq($this->recurrence->getLineData(), $start);
+					$counter->lastOccurrence();
 				}
-				//if count is set, then figure out the last occurrence and set that as the end date
 			}
 			
 		}

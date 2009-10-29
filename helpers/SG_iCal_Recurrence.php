@@ -14,6 +14,7 @@
  */
 class SG_iCal_Recurrence {
 
+	protected $lineData;
 	protected $freq;
 
 	protected $until;
@@ -43,11 +44,12 @@ class SG_iCal_Recurrence {
 
 	/**
 	 * Creates an recurrence object with a passed in line.  Parses the line.
-	 * @param object $line an SG_iCal_Line object which will be parsed to get the
+	 * @param string $line
 	 * desired information.
 	 */
-	public function __construct(SG_iCal_Line $line) {
-		$this->parseLine($line->getData());
+	public function __construct($line) {
+		$this->lineData = $line;
+		$this->parseLine($this->lineData);
 	}
 
 	/**
@@ -88,6 +90,14 @@ class SG_iCal_Recurrence {
 			return $this->$member;
 		}
 		return false;
+	}
+
+	/**
+	 * Returns the entire, original data of the line that was passed into the constructor.
+	 * @return string
+	 */
+	public function getLineData() {
+		return $this->lineData;
 	}
 
 	/**

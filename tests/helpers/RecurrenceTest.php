@@ -12,7 +12,7 @@ class RecurrenceTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetUntilWithTypicalLineReturnsUntil() {
-		$line = new SG_iCal_Line('RRULE:FREQ=DAILY;UNTIL=19971224T000000Z');
+		$line = 'FREQ=DAILY;UNTIL=19971224T000000Z';
 		$recurrence = new SG_iCal_Recurrence($line);
 		$this->assertEquals('19971224T000000Z', $recurrence->getUntil());
 	}

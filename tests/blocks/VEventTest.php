@@ -110,12 +110,42 @@ class VEventTest extends PHPUnit_Framework_TestCase {
 		$ical->addTimeZone(new SG_iCal_VTimeZone($timezone));
 		$ical->addtimeZone(new SG_iCal_VTimeZone($timezone2));
 		$data['uid'] = new SG_iCal_Line('uid');
-		//this takes place after Copenhagens change back to standard time
+		//this takes place after Copenhagen's change back to standard time
 		$data['dtstart'] = new SG_iCal_Line('DTSTART;TZID=Europe/Copenhagen:20091027T100000');
 		$data['rrule'] = new SG_iCal_Line('RRULE:FREQ=DAILY;UNTIL=20091030T130000Z');
 
 		date_default_timezone_set('America/New_York');
 		$event = new SG_iCal_VEvent($data, $ical);
 		$this->assertEquals(strtotime('20091030T090000'), $event->getEnd());
+	}
+
+	public function testParsingOfEndTimeWithCountSet() {
+		$ical = new SG_iCal();
+		$timezone['tzid'] = 'Europe/Copenhagen';
+		$timezone['daylight'] = array(
+			'tzoffsetfrom' => '+0100',
+			'tzoffsetto' => '+0200',
+			'tzname' => 'CEST',
+			'dtstart' => '19700329T020000',
+			'rrule' => 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+		);
+		$timezone['standard'] = array(
+			'tzoffsetfrom' => '+0200',
+			'tzoffsetto' => '+0100',
+			'tzname' => 'CET',
+			'dtstart' => '19701025T030000',
+			'rrule' => 'FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+		);
+		$ical->addTimeZone(new SG_iCal_VTimeZone($timezone));
+
+		$data['uid'] = new SG_iCal_Line('uid');
+		$data['dtstart'] = new SG_iCal_Line('DTSTART;TZID=Europe/Copenhagen:20091022T100000');
+		$data['rrule'] = new SG_iCal_Line('RRULE:FREQ=DAILY;COUNT=10');
+
+		date_default_timezone_set('America/New_York');
+
+		$event = new SG_iCal_VEvent($data, $ical);
+		$this->assertEquals(strtotime('20091101T050000'), $event->getEnd());
+
 	}
 }
